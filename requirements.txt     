@@ -1,0 +1,21 @@
+# 기본 설치됨 (버전 고정)
+datasets==4.0.0
+minio==7.2.16
+pandas==2.3.2
+
+# 새로 필요한 패키지들
+matplotlib
+seaborn
+scikit-image
+opencv-python
+piq
+pybrisque
+image-quality
+torch
+torchvision
+torchaudio
+cleanlab
+imagehash
+clip-anytorch
+scipy
+scikit-learn

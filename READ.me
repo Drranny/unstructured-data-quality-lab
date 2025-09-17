@@ -1,0 +1,118 @@
+# Unstructured Data Quality Diagnosis
+
+이 프로젝트는 **비정형 데이터 품질 진단 기법 연구**를 위한 실험 환경을 구성합니다.  
+MinIO를 데이터 저장소로 활용하고, 다양한 데이터셋(TID2013, CIFAR-10 등)에 대해 품질 진단 알고리즘을 적용합니다.
+
+---
+
+## 📂 프로젝트 구조
+```
+
+project\_root/
+├─ data/                  # MinIO 데이터 저장소
+│   └─ dblab-dataset/
+├─ experiments/           # 실험 코드
+│   ├─ tid2013\_iqa/       # TID2013 화질 품질 진단
+│   └─ cifar10\_label/     # CIFAR-10 라벨 품질 진단
+├─ results/               # 진단 결과물 (CSV, 그래프 등)
+├─ venv/                  # Python 가상환경
+├─ requirements.txt       # 실험에 필요한 Python 라이브러리
+└─ README.md              # 프로젝트 설명
+
+
+
+## ⚙️ 환경 설정
+
+### 1. 가상환경 생성 및 의존성 설치
+```bash
+python3 -m venv venv
+source venv/bin/activate   # macOS/Linux
+venv\Scripts\activate      # Windows PowerShell
+
+pip install -r requirements.txt
+````
+
+### 2. MinIO 서버 실행
+
+연구용 MinIO는 다음 포트를 사용합니다:
+
+* **9000**: S3 API (Python SDK, CLI)
+* **9001**: Web Console
+
+```bash
+docker run -p 9000:9000 -p 9001:9001 \
+  -e "MINIO_ROOT_USER=admin" \
+  -e "MINIO_ROOT_PASSWORD=admin12345" \
+  quay.io/minio/minio server /data --console-address ":9001"
+```
+--> docker ps 해서 떠있으면 그냥 ssh L-9000 ,9001 하면 됨
+
+### 3. 팀원 접속(아직은 공용)
+
+admin
+admin12345
+
+* **Web Console**: `http://<서버IP>:9001`
+* **Python SDK 예시**:
+
+  ```python
+  from minio import Minio
+
+  client = Minio(
+      "<서버IP>:9000",
+      access_key="team1",
+      secret_key="password123",
+      secure=False
+  )
+  print(client.list_buckets())
+  ```
+
+---
+
+## 🗂 사용 데이터셋
+
+* **TID2013**: 이미지 화질 열화 (블러, 노이즈, 압축) → IQA 실험
+* **CIFAR-10**: 이미지 분류 (라벨 정확성, 클래스 불균형성)
+
+
+---
+
+## 🧪 실험 방법
+
+### 1. TID2013 화질 품질 진단
+
+```bash
+cd experiments/tid2013_iqa
+python run_iqa.py
+```
+
+* 지표: SSIM, PSNR, NIQE, BRISQUE
+* MOS와 알고리즘 점수 상관성 분석
+
+### 2. CIFAR-10 라벨 품질 진단
+
+```bash
+cd experiments/cifar10_label
+python run_labelcheck.py
+```
+
+* 지표: 클래스 분포, noisy label 탐지 (`cleanlab`)
+* pretrained CNN 기반 라벨 검증
+
+---
+
+## 📊 결과 저장
+
+* `results/tid2013/` → 화질 품질 분석 CSV/그래프
+* `results/cifar10/` → 라벨 품질 분석 CSV/그래프
+
+---
+
+
+
+## 🎯 연구 목표
+
+* 비정형 데이터 품질을 **정량적으로 진단할 수 있는 환경 구축**
+* 데이터셋별 **품질 점수 산출 및 비교**
+* 최종적으로 **품질 점수 기반 데이터 활용 전략 제안**
+
