@@ -5,9 +5,9 @@ import pandas as pd
 
 # MinIO 연결
 client = Minio(
-    "127.0.0.1:9000",
-    access_key="admin",
-    secret_key="admin12345",
+    "localhost:9000",
+    access_key=os.getenv("ADMIN_ID"),
+    secret_key=os.getenv("ADMIN_PASSWORD"),
     secure=False
 )
 bucket_name = "dblab-dataset"

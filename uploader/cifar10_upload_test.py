@@ -1,13 +1,20 @@
 from datasets import load_dataset
+
 from minio import Minio
 import io
 from concurrent.futures import ThreadPoolExecutor
+import os
+from dotenv import load_dotenv
+
+
+# .env 파일에서 환경변수 불러오기
+load_dotenv()
 
 # 1. MinIO 클라이언트 연결
 client = Minio(
     "localhost:9000",
-    access_key="admin",
-    secret_key="admin12345",
+    access_key=os.getenv("ADMIN_ID"),
+    secret_key=os.getenv("ADMIN_PASSWORD"),
     secure=False
 )
 

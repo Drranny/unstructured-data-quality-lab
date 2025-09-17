@@ -2,8 +2,8 @@ from minio import Minio
 
 client = Minio(
     "localhost:9000",
-    access_key="admin",
-    secret_key="admin12345",
+    access_key=os.getenv("ADMIN_ID"),
+    secret_key=os.getenv("ADMIN_PASSWORD"),
     secure=False
 )
 
